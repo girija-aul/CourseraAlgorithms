@@ -6,6 +6,7 @@ import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 public class Percolation {
 
     private final WeightedQuickUnionUF grid;
+    private final WeightedQuickUnionUF grid2;
     private final boolean arr[];
     private final int size;
     private final int virtualTopNode;
@@ -22,6 +23,7 @@ public class Percolation {
 
         // Below statement internally is assigning indices values to array elements
         grid = new WeightedQuickUnionUF(totalElements + 2);
+        grid2 = new WeightedQuickUnionUF(totalElements + 1);
 
         virtualTopNode = totalElements;
         virtualBottomNode = totalElements + 1;
@@ -35,6 +37,7 @@ public class Percolation {
         // First row is connected to virtualTopNode
         for (int i = 0; i < size; ++i) {
             grid.union(i, virtualTopNode);
+            grid2.union(i, virtualTopNode);
         }
 
         // Last row is connected to virtualBottomNode
@@ -54,6 +57,7 @@ public class Percolation {
                 int topNeighbor = getArrayIndexFromRowCol(row - 1, col);
                 if (arr[topNeighbor]) {
                     grid.union(id, topNeighbor);
+                    grid2.union(id,  topNeighbor);
                 }
             }
 
@@ -62,6 +66,7 @@ public class Percolation {
                 int bottomNeighbor = getArrayIndexFromRowCol(row + 1, col);
                 if (arr[bottomNeighbor]) {
                     grid.union(id, bottomNeighbor);
+                    grid2.union(id, bottomNeighbor);
                 }
             }
 
@@ -70,6 +75,7 @@ public class Percolation {
                 int leftNeighbor = getArrayIndexFromRowCol(row, col - 1);
                 if (arr[leftNeighbor]) {
                     grid.union(id, leftNeighbor);
+                    grid2.union(id, leftNeighbor);
                 }
             }
 
@@ -78,6 +84,7 @@ public class Percolation {
                 int rightNeighbor = getArrayIndexFromRowCol(row, col + 1);
                 if (arr[rightNeighbor]) {
                     grid.union(id, rightNeighbor);
+                    grid2.union(id, rightNeighbor);
                 }
             }
         }
@@ -92,7 +99,7 @@ public class Percolation {
     public boolean isFull(int row, int col) {
         int id = getArrayIndexFromRowCol(row, col);
 
-        if (isOpen(row, col) && this.grid.connected(id, this.virtualTopNode)) {
+        if (isOpen(row, col) && this.grid2.connected(id, this.virtualTopNode)) {
             return true;
         }
         return false;
@@ -119,7 +126,6 @@ public class Percolation {
     }
 
     public static void main(String[] args) {
-        // TODO Auto-generated method stub
         int size = 2;
         Percolation sample = new Percolation(size);
 
